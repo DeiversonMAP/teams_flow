@@ -24,7 +24,13 @@ public class Team {
     @JoinColumn(name = "leader_id_id")
     private User leaderId;
 
-//    private getMemberCount()    int
+    @Transient
+    private Integer memberCount;
+
+    public boolean canAddMember(int currentMembers) {
+        return currentMembers < maxMembers;
+    }
+
 }
 
 

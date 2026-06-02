@@ -14,12 +14,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KanbanColumn {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
+
     private String name;
     private Integer position;
 
+    public boolean matchesStatus(TaskStatus status) {
+        return this.status == status;
+    }
+
+    public void movePosition(Integer newPosition) {
+        this.position = newPosition;
+    }
 }

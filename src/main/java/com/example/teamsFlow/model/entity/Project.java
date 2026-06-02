@@ -22,6 +22,15 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "team_id_id")
     private Team teamId;
-//        private calculateStoryPoints()
+
+    public void addStoryPoints(Integer points) {
+        if (points != null) {
+            this.totalStoryPoints += points;
+        }
+    }
+
+    public boolean isOverdue(String currentDate) {
+        return deadline.compareTo(currentDate) < 0;
+    }
 
 }

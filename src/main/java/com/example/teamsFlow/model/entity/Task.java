@@ -33,5 +33,16 @@ public class Task {
     @JoinColumn(name = "tested_by_id_id")
     private User testedById;
 
+    public void assignTo(User user) {
+        this.assignedToId = user;
+    }
+
+    public void changeStatus(TaskStatus newStatus) {
+        this.currentStatus = newStatus;
+    }
+
+    public boolean isCompleted() {
+        return this.currentStatus == TaskStatus.DONE;
+    }
 
 }

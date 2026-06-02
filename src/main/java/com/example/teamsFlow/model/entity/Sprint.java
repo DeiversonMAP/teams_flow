@@ -24,5 +24,13 @@ public class Sprint {
     private String endDate;
     private Integer totalStoryPoints;
 
+
+    public void addStoryPoints(Integer points) {
+        if (points != null) {
+            this.totalStoryPoints += points;
+        }
+    }
+
+
 }
 

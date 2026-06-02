@@ -10,4 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamLeader extends User{
+
+    public boolean canManageTeam() {
+        return true;
+    }
+
 }

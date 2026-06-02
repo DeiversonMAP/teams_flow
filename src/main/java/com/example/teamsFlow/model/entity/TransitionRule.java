@@ -24,4 +24,9 @@ public class TransitionRule {
     private UserRole requiredRole;
     private String description;
 
+    public boolean allows(TaskStatus from, TaskStatus to) {
+        return fromStatus == from && toStatus == to;
+    }
+
+
 }
