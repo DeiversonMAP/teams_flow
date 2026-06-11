@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class TeamLeader extends User{
 
     public boolean canManageTeam() {

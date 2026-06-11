@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,5 +21,7 @@ public class User {
     private String email;
     private String passwordHash;
     private String createdAt;
+
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 }
