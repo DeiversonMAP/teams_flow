@@ -1,49 +1,84 @@
 package com.example.teamsFlow.api.controller;
 
 import com.example.teamsFlow.api.dto.UserDTO;
+import com.example.teamsFlow.exception.RegraNegocioException;
 import com.example.teamsFlow.model.entity.User;
-import com.example.teamsFlow.model.repository.UserRepository;
+import com.example.teamsFlow.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
+@CrossOrigin
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    private final UserService service;
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userRepository.findAll()
-                .stream()
-                .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(users);
+    public ResponseEntity get() {
+        List<User> users = service.getUsers();
+        return ResponseEntity.ok(users.stream().map(UserDTO::create).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        return userRepository.findById(id)
-                .map(user -> ResponseEntity.ok(modelMapper.map(user, UserDTO.class)))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity get(@PathVariable("id") Long id) {
+        Optional<User> user = service.getUserById(id);
+        if (!user.isPresent()) {
+            return new ResponseEntity("Usuário não encontrado", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(user.map(UserDTO::create));
     }
 
-    // Nota: Em um cenário real, você criaria as subclasses (Administrator, Leader, Member)
-    // dependendo do 'role' ou usando endpoints específicos.
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        User user = modelMapper.map(userDTO, User.class);
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(savedUser, UserDTO.class));
+    public ResponseEntity post(@RequestBody UserDTO dto) {
+        try {
+            User user = converter(dto);
+            user = service.salvar(user);
+            return new ResponseEntity(user, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody UserDTO dto) {
+        if (!service.getUserById(id).isPresent()) {
+            return new ResponseEntity("Usuário não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            User user = converter(dto);
+            user.setId(id);
+            service.salvar(user);
+            return ResponseEntity.ok(user);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity excluir(@PathVariable("id") Long id) {
+        Optional<User> user = service.getUserById(id);
+        if (!user.isPresent()) {
+            return new ResponseEntity("Usuário não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            service.excluir(user.get());
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    public User converter(UserDTO dto) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(dto, User.class);
     }
 }

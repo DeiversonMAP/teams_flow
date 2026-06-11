@@ -6,10 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    // Exemplo de busca customizada: Buscar todos os membros de uma equipe específica
-    List<Member> findByTeamId(Long teamId);
+    List<Member> findByTeam_Id(Long teamId);
 }
-

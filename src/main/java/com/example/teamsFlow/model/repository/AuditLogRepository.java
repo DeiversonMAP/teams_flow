@@ -1,12 +1,12 @@
 package com.example.teamsFlow.model.repository;
 
+import com.example.teamsFlow.model.entity.AuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface AuditLogRepository extends JpaRepository<AuditLogRepository, Long> {
-    // Busca o histórico de alterações de uma entidade específica (ex: Task, Project)
-    List<AuditLogRepository> findByEntityTypeAndEntityId(String entityType, Long entityId);
+public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
+    List<AuditLog> findByEntityTypeAndEntityId(String entityType, Long entityId);
 }

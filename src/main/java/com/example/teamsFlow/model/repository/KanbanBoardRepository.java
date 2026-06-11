@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface KanbanBoardRepository extends JpaRepository<KanbanBoard, Long> {
-    Optional<KanbanBoard> findByProjectId(Long projectId);
+    Optional<KanbanBoard> findByProject_Id(Long projectId);
 }

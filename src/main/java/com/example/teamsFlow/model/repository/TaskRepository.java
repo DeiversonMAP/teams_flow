@@ -9,12 +9,7 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    // Busca todas as tarefas de uma Sprint
-    List<Task> findBySprintId(Long sprintId);
-
-    // Busca tarefas atribuídas a um usuário específico
-    List<Task> findByAssignedToId(Long userId);
-
-    // Busca tarefas por status
+    List<Task> findBySprint_Id(Long sprintId);
+    List<Task> findByAssignedTo_Id(Long userId);
     List<Task> findByCurrentStatus(TaskStatus status);
 }

@@ -1,6 +1,6 @@
 package com.example.teamsFlow.api.dto;
 
-import com.example.teamsFlow.model.entity.Project;
+import com.example.teamsFlow.model.entity.Sprint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,20 +9,20 @@ import org.modelmapper.ModelMapper;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectDTO {
+public class SprintDTO {
 
     private Long id;
     private String name;
-    private String description;
-    private String deadline;
+    private String startDate;
+    private String endDate;
     private Integer totalStoryPoints;
-    private Long teamId;
+    private Long projectId;
 
-    public static ProjectDTO create(Project project) {
+    public static SprintDTO create(Sprint sprint) {
         ModelMapper modelMapper = new ModelMapper();
-        ProjectDTO dto = modelMapper.map(project, ProjectDTO.class);
-        if (project.getTeam() != null) {
-            dto.setTeamId(project.getTeam().getId());
+        SprintDTO dto = modelMapper.map(sprint, SprintDTO.class);
+        if (sprint.getProject() != null) {
+            dto.setProjectId(sprint.getProject().getId());
         }
         return dto;
     }

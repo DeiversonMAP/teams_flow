@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface LeadershipDelegationRepository extends JpaRepository<LeadershipDelegation, Long> {
-    List<LeadershipDelegation> findByForTeamIdAndIsActiveTrue(Long teamId);
+    List<LeadershipDelegation> findByTeam_IdAndIsActiveTrue(Long teamId);
 }

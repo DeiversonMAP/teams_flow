@@ -16,11 +16,15 @@ public class KanbanColumn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+    private Integer position;
+
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
-    private String name;
-    private Integer position;
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private KanbanBoard board;
 
     public boolean matchesStatus(TaskStatus status) {
         return this.status == status;

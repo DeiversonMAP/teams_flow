@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,17 +21,16 @@ public class Project {
     private Integer totalStoryPoints;
 
     @ManyToOne
-    @JoinColumn(name = "team_id_id")
-    private Team teamId;
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     public void addStoryPoints(Integer points) {
         if (points != null) {
-            this.totalStoryPoints += points;
+            this.totalStoryPoints = (this.totalStoryPoints == null ? 0 : this.totalStoryPoints) + points;
         }
     }
 
     public boolean isOverdue(String currentDate) {
-        return deadline.compareTo(currentDate) < 0;
+        return deadline != null && deadline.compareTo(currentDate) < 0;
     }
-
 }

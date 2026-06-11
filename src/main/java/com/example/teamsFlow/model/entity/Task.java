@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,23 +19,29 @@ public class Task {
     private String title;
     private String description;
     private String createdAt;
-    private TaskStatus currentStatus;
     private Integer storyPoints;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by_id_id")
-    private User createdById;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus currentStatus;
 
     @ManyToOne
-    @JoinColumn(name = "assigned_to_id_id")
-    private User assignedToId;
+    @JoinColumn(name = "sprint_id")
+    private Sprint sprint;
 
     @ManyToOne
-    @JoinColumn(name = "tested_by_id_id")
-    private User testedById;
+    @JoinColumn(name = "created_by_id")
+    private User createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "assigned_to_id")
+    private User assignedTo;
+
+    @ManyToOne
+    @JoinColumn(name = "tested_by_id")
+    private User testedBy;
 
     public void assignTo(User user) {
-        this.assignedToId = user;
+        this.assignedTo = user;
     }
 
     public void changeStatus(TaskStatus newStatus) {
@@ -44,5 +51,4 @@ public class Task {
     public boolean isCompleted() {
         return this.currentStatus == TaskStatus.DONE;
     }
-
 }

@@ -1,17 +1,15 @@
 package com.example.teamsFlow.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@DiscriminatorValue("MEMBER")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Member extends User {
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;

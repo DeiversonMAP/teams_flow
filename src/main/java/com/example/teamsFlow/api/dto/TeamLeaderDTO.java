@@ -1,15 +1,21 @@
 package com.example.teamsFlow.api.dto;
 
+import com.example.teamsFlow.model.entity.TeamLeader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class TeamLeaderDTO extends UserDTO {
+
     private Long currentTeamId;
     private Boolean isTemporaryLeader;
+
+    public static TeamLeaderDTO create(TeamLeader leader) {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(leader, TeamLeaderDTO.class);
+    }
 }
