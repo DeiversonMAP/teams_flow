@@ -10,11 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TeamLeader extends User {
-
     private Long currentTeamId;
     private Boolean isTemporaryLeader;
-
-    public boolean canManageTeam() {
-        return true;
-    }
 }

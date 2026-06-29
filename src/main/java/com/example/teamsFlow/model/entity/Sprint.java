@@ -10,23 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Sprint {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String startDate;
     private String endDate;
     private Integer totalStoryPoints;
-
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
-
-    public void addStoryPoints(Integer points) {
-        if (points != null) {
-            this.totalStoryPoints = (this.totalStoryPoints == null ? 0 : this.totalStoryPoints) + points;
-        }
-    }
 }

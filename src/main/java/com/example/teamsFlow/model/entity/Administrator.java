@@ -9,13 +9,4 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("ADMINISTRATOR")
 @Data
 @NoArgsConstructor
-public class Administrator extends User {
-
-    public boolean canManageUsers() {
-        return true;
-    }
-
-    public boolean canManageTeams() {
-        return true;
-    }
-}
+public class Administrator extends User {}

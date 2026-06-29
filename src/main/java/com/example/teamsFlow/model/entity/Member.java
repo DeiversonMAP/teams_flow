@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Member extends User {
-
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;

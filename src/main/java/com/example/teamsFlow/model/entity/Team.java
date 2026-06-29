@@ -11,27 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Team {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Integer maxMembers;
-
     @Enumerated(EnumType.STRING)
     private TeamStatus status;
-
     private Integer score;
     private String createdAt;
-
     @ManyToOne
     @JoinColumn(name = "leader_id")
     private User leader;
-
-    @Transient
-    private Integer memberCount;
-
-    public boolean canAddMember(int currentMembers) {
-        return currentMembers < maxMembers;
-    }
 }

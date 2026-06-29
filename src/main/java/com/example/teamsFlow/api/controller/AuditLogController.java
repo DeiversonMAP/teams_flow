@@ -3,15 +3,14 @@ package com.example.teamsFlow.api.controller;
 import com.example.teamsFlow.api.dto.AuditLogDTO;
 import com.example.teamsFlow.exception.RegraNegocioException;
 import com.example.teamsFlow.model.entity.AuditLog;
-import com.example.teamsFlow.model.entity.User;
 import com.example.teamsFlow.service.AuditLogService;
-import com.example.teamsFlow.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,58 +19,53 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/audit-logs")
 @RequiredArgsConstructor
 @CrossOrigin
+@Tag(name = "Audit Logs")
 public class AuditLogController {
-
     private final AuditLogService service;
-    private final UserService userService;
 
     @GetMapping
+    @Operation(summary = "Listar todos(as) os(as) logs")
     public ResponseEntity get() {
-        List<AuditLog> logs = service.getLogs();
-        return ResponseEntity.ok(logs.stream().map(AuditLogDTO::create).collect(Collectors.toList()));
+        List<AuditLog> list = service.getLogs();
+        return ResponseEntity.ok(list.stream().map(AuditLogDTO::create).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar log por ID")
     public ResponseEntity get(@PathVariable("id") Long id) {
-        Optional<AuditLog> log = service.getLogById(id);
-        if (!log.isPresent()) {
-            return new ResponseEntity("Log não encontrado", HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(log.map(AuditLogDTO::create));
+        Optional<AuditLog> obj = service.getLogById(id);
+        if (!obj.isPresent()) return new ResponseEntity("log não encontrado(a)", HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(obj.map(AuditLogDTO::create));
     }
 
     @PostMapping
+    @Operation(summary = "Criar log")
     public ResponseEntity post(@RequestBody AuditLogDTO dto) {
         try {
-            AuditLog log = converter(dto);
-            log = service.salvar(log);
-            return new ResponseEntity(log, HttpStatus.CREATED);
-        } catch (RegraNegocioException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            AuditLog obj = new ModelMapper().map(dto, AuditLog.class);
+            obj = service.salvar(obj);
+            return new ResponseEntity(obj, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) { return ResponseEntity.badRequest().body(e.getMessage()); }
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualizar log")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody AuditLogDTO dto) {
+        if (!service.getLogById(id).isPresent()) return new ResponseEntity("log não encontrado(a)", HttpStatus.NOT_FOUND);
+        try {
+            AuditLog obj = new ModelMapper().map(dto, AuditLog.class);
+            obj.setId(id);
+            service.salvar(obj);
+            return ResponseEntity.ok(obj);
+        } catch (RegraNegocioException e) { return ResponseEntity.badRequest().body(e.getMessage()); }
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Excluir log")
     public ResponseEntity excluir(@PathVariable("id") Long id) {
-        Optional<AuditLog> log = service.getLogById(id);
-        if (!log.isPresent()) {
-            return new ResponseEntity("Log não encontrado", HttpStatus.NOT_FOUND);
-        }
-        try {
-            service.excluir(log.get());
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        } catch (RegraNegocioException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    public AuditLog converter(AuditLogDTO dto) {
-        ModelMapper modelMapper = new ModelMapper();
-        AuditLog log = modelMapper.map(dto, AuditLog.class);
-        if (dto.getChangedById() != null) {
-            Optional<User> user = userService.getUserById(dto.getChangedById());
-            log.setChangedBy(user.orElse(null));
-        }
-        return log;
+        Optional<AuditLog> obj = service.getLogById(id);
+        if (!obj.isPresent()) return new ResponseEntity("log não encontrado(a)", HttpStatus.NOT_FOUND);
+        try { service.excluir(obj.get()); return new ResponseEntity(HttpStatus.NO_CONTENT); }
+        catch (RegraNegocioException e) { return ResponseEntity.badRequest().body(e.getMessage()); }
     }
 }
