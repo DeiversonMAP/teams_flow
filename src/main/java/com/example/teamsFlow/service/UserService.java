@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
     public UserDetails autenticar(User user) {
         UserDetails userDetails = loadUserByUsername(user.getEmail());
         if (passwordEncoder.matches(user.getPasswordHash(), userDetails.getPassword())) return userDetails;
-        throw new SenhaInvalidaException("F");
+        throw new SenhaInvalidaException();
     }
 
     @Override
