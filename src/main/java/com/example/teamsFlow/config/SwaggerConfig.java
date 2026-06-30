@@ -20,9 +20,7 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("TeamsFlow API")
                 .description("API REST para gerenciamento de equipes ágeis, projetos e tarefas.")
-                .version("1.0.0")
-                .contact(new Contact().name("Deiverson").email("deiverson@teamsflow.com"))
-                .license(new License().name("MIT License")))
+                .version("1.0.0"))
             .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
             .components(new Components().addSecuritySchemes("bearerAuth",
                 new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))

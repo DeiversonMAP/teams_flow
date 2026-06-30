@@ -30,9 +30,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
-
-    @Bean
     public OncePerRequestFilter jwtFilter() { return new JwtAuthFilter(jwtService, userService); }
 
     @Bean
